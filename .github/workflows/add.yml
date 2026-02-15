@@ -1,13 +1,16 @@
-name: Add two number Pipeline
+name: Python CI Pipeline
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  add-numbers:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,8 +20,17 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: Run Python Script
+      - name: Install Dependencies
         run: |
-          python add.py 10 20
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          pytest -v
+
+      - name: Run Application with Multiple Test Cases
+        run: |
+          python add.py 3 10 20 30 40 50 60
